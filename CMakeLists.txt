@@ -66,9 +66,9 @@ endif()
 # ExternalProject_Add() or make downstream modifications to the libjpeg-turbo
 # build system to suit their specific needs.  Please do not file bug reports,
 # feature requests, or pull requests regarding this.
-if(NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-  message(FATAL_ERROR "The ${CMAKE_PROJECT_NAME} build system cannot be integrated into another build system using add_subdirectory().  Use ExternalProject_Add() instead.")
-endif()
+# if(NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+#   message(FATAL_ERROR "The ${CMAKE_PROJECT_NAME} build system cannot be integrated into another build system using add_subdirectory().  Use ExternalProject_Add() instead.")
+# endif()
 
 # CMake 3.14 and later sets CMAKE_MACOSX_BUNDLE to TRUE by default when
 # CMAKE_SYSTEM_NAME is iOS, tvOS, or watchOS, which breaks the libjpeg-turbo
@@ -167,70 +167,70 @@ message(STATUS "${BITS}-bit build (${CPU_TYPE})")
 # INSTALL DIRECTORIES
 ###############################################################################
 
-if(WIN32)
-  if(MSVC_LIKE)
-    set(CMAKE_INSTALL_DEFAULT_PREFIX "c:/${CMAKE_PROJECT_NAME}")
-  else()
-    set(CMAKE_INSTALL_DEFAULT_PREFIX "c:/${CMAKE_PROJECT_NAME}-gcc")
-  endif()
-  if(BITS EQUAL 64)
-    set(CMAKE_INSTALL_DEFAULT_PREFIX "${CMAKE_INSTALL_DEFAULT_PREFIX}64")
-  endif()
-else()
-  if(NOT CMAKE_INSTALL_DEFAULT_PREFIX)
-    set(CMAKE_INSTALL_DEFAULT_PREFIX /opt/${CMAKE_PROJECT_NAME})
-  endif()
-endif()
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_DEFAULT_PREFIX}" CACHE PATH
-    "Directory into which to install ${CMAKE_PROJECT_NAME} (default: ${CMAKE_INSTALL_DEFAULT_PREFIX})"
-    FORCE)
-endif()
-message(STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
+# if(WIN32)
+#   if(MSVC_LIKE)
+#     set(CMAKE_INSTALL_DEFAULT_PREFIX "c:/${CMAKE_PROJECT_NAME}")
+#   else()
+#     set(CMAKE_INSTALL_DEFAULT_PREFIX "c:/${CMAKE_PROJECT_NAME}-gcc")
+#   endif()
+#   if(BITS EQUAL 64)
+#     set(CMAKE_INSTALL_DEFAULT_PREFIX "${CMAKE_INSTALL_DEFAULT_PREFIX}64")
+#   endif()
+# else()
+#   if(NOT CMAKE_INSTALL_DEFAULT_PREFIX)
+#     set(CMAKE_INSTALL_DEFAULT_PREFIX /opt/${CMAKE_PROJECT_NAME})
+#   endif()
+# endif()
+# if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+#   set(CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_DEFAULT_PREFIX}" CACHE PATH
+#     "Directory into which to install ${CMAKE_PROJECT_NAME} (default: ${CMAKE_INSTALL_DEFAULT_PREFIX})"
+#     FORCE)
+# endif()
+# message(STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
 
 # When the prefix is /opt/${CMAKE_PROJECT_NAME}, we assume that an "official"
 # build is being created, and thus we install things into specific locations.
 
-if(CMAKE_INSTALL_PREFIX STREQUAL "${CMAKE_INSTALL_DEFAULT_PREFIX}")
-  set(CMAKE_INSTALL_DEFAULT_DATAROOTDIR "")
-  set(CMAKE_INSTALL_DEFAULT_DOCDIR "<CMAKE_INSTALL_DATAROOTDIR>/doc")
-  set(CMAKE_INSTALL_DEFAULT_JAVADIR "<CMAKE_INSTALL_DATAROOTDIR>/classes")
-  if(UNIX AND NOT APPLE)
-    if(BITS EQUAL 64)
-      set(CMAKE_INSTALL_DEFAULT_LIBDIR "lib64")
-    elseif(CMAKE_C_COMPILER_ABI MATCHES "ELF X32")
-      set(CMAKE_INSTALL_DEFAULT_LIBDIR "libx32")
-    else()
-      set(CMAKE_INSTALL_DEFAULT_LIBDIR "lib32")
-    endif()
-  endif()
-endif()
+# if(CMAKE_INSTALL_PREFIX STREQUAL "${CMAKE_INSTALL_DEFAULT_PREFIX}")
+#   set(CMAKE_INSTALL_DEFAULT_DATAROOTDIR "")
+#   set(CMAKE_INSTALL_DEFAULT_DOCDIR "<CMAKE_INSTALL_DATAROOTDIR>/doc")
+#   set(CMAKE_INSTALL_DEFAULT_JAVADIR "<CMAKE_INSTALL_DATAROOTDIR>/classes")
+#   if(UNIX AND NOT APPLE)
+#     if(BITS EQUAL 64)
+#       set(CMAKE_INSTALL_DEFAULT_LIBDIR "lib64")
+#     elseif(CMAKE_C_COMPILER_ABI MATCHES "ELF X32")
+#       set(CMAKE_INSTALL_DEFAULT_LIBDIR "libx32")
+#     else()
+#       set(CMAKE_INSTALL_DEFAULT_LIBDIR "lib32")
+#     endif()
+#   endif()
+# endif()
 
-include(cmakescripts/GNUInstallDirs.cmake)
+# include(cmakescripts/GNUInstallDirs.cmake)
 
-macro(report_directory var)
-  if(CMAKE_INSTALL_${var} STREQUAL CMAKE_INSTALL_FULL_${var})
-    message(STATUS "CMAKE_INSTALL_${var} = ${CMAKE_INSTALL_${var}}")
-  else()
-    message(STATUS "CMAKE_INSTALL_${var} = ${CMAKE_INSTALL_${var}} (${CMAKE_INSTALL_FULL_${var}})")
-  endif()
-  mark_as_advanced(CLEAR CMAKE_INSTALL_${var})
-endmacro()
+# macro(report_directory var)
+#   if(CMAKE_INSTALL_${var} STREQUAL CMAKE_INSTALL_FULL_${var})
+#     message(STATUS "CMAKE_INSTALL_${var} = ${CMAKE_INSTALL_${var}}")
+#   else()
+#     message(STATUS "CMAKE_INSTALL_${var} = ${CMAKE_INSTALL_${var}} (${CMAKE_INSTALL_FULL_${var}})")
+#   endif()
+#   mark_as_advanced(CLEAR CMAKE_INSTALL_${var})
+# endmacro()
 
-set(DIRLIST "BINDIR;DATAROOTDIR;DOCDIR;INCLUDEDIR;LIBDIR")
-if(UNIX)
-  list(APPEND DIRLIST "MANDIR")
-endif()
-foreach(dir ${DIRLIST})
-  # CMAKE_INSTALL_BINDIR, CMAKE_INSTALL_DOCDIR, CMAKE_INSTALL_INCLUDEDIR,
-  # CMAKE_INSTALL_LIBDIR, and CMAKE_INSTALL_MANDIR cannot be blank, because
-  # either CMake will fail to configure the build, or install() will attempt to
-  # install files to the root directory.
-  if(NOT dir STREQUAL "DATAROOTDIR" AND NOT CMAKE_INSTALL_${dir})
-    message(FATAL_ERROR "CMAKE_INSTALL_${dir} cannot be blank")
-  endif()
-  report_directory(${dir})
-endforeach()
+# set(DIRLIST "BINDIR;DATAROOTDIR;DOCDIR;INCLUDEDIR;LIBDIR")
+# if(UNIX)
+#   list(APPEND DIRLIST "MANDIR")
+# endif()
+# foreach(dir ${DIRLIST})
+#   # CMAKE_INSTALL_BINDIR, CMAKE_INSTALL_DOCDIR, CMAKE_INSTALL_INCLUDEDIR,
+#   # CMAKE_INSTALL_LIBDIR, and CMAKE_INSTALL_MANDIR cannot be blank, because
+#   # either CMake will fail to configure the build, or install() will attempt to
+#   # install files to the root directory.
+#   if(NOT dir STREQUAL "DATAROOTDIR" AND NOT CMAKE_INSTALL_${dir})
+#     message(FATAL_ERROR "CMAKE_INSTALL_${dir} cannot be blank")
+#   endif()
+#   report_directory(${dir})
+# endforeach()
 
 
 ###############################################################################
@@ -647,7 +647,7 @@ endif()
 message(STATUS "CMAKE_EXECUTABLE_SUFFIX = ${CMAKE_EXECUTABLE_SUFFIX}")
 
 add_custom_target(wrappers COMMAND ${CMAKE_COMMAND}
- -DSOURCE_DIR=${CMAKE_SOURCE_DIR}/src/wrapper
+ -DSOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/src/wrapper
  -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/GenerateWrappers.cmake)
 
 set(JPEG_SOURCES src/jcapimin.c
@@ -784,10 +784,10 @@ if(WITH_TURBOJPEG)
   if(ENABLE_SHARED)
     set(TJMAPFILE ${CMAKE_CURRENT_SOURCE_DIR}/src/turbojpeg-mapfile)
     if(MSVC_LIKE)
-      configure_file(${CMAKE_SOURCE_DIR}/win/turbojpeg.rc.in
-        ${CMAKE_BINARY_DIR}/win/turbojpeg.rc)
+        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/win/turbojpeg.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/win/turbojpeg.rc)
       set(TURBOJPEG_SOURCES ${TURBOJPEG_SOURCES}
-        ${CMAKE_BINARY_DIR}/win/turbojpeg.rc)
+        ${CMAKE_CURRENT_BINARY_DIR}/win/turbojpeg.rc)
     endif()
     add_library(turbojpeg SHARED ${TURBOJPEG_SOURCES})
     if(SPNG_LIBRARY)
@@ -842,7 +842,7 @@ if(WITH_TURBOJPEG)
     endif()
 
     add_custom_target(tjdoc COMMAND doxygen -s ../doc/doxygen.config
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/src)
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src)
   endif()
 
   if(ENABLE_STATIC)
@@ -1896,45 +1896,45 @@ if(WITH_TURBOJPEG)
     set(BASH bash)
   endif()
   add_custom_target(tjtest COMMAND ${CMAKE_COMMAND} -DWITH_JNA=${WITH_JNA}
-    -DPRECISION=8 -P ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
-    DEPENDS ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    -DPRECISION=8 -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
       ${CMAKE_CURRENT_BINARY_DIR}/test/tjbenchtest)
   add_custom_target(tjtest12 COMMAND ${CMAKE_COMMAND} -DWITH_JNA=${WITH_JNA}
-    -DPRECISION=12 -P ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
-    DEPENDS ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    -DPRECISION=12 -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
       ${CMAKE_CURRENT_BINARY_DIR}/test/tjbenchtest)
   add_custom_target(tjtest16 COMMAND ${CMAKE_COMMAND} -DWITH_JNA=${WITH_JNA}
-    -DPRECISION=2 -P ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    -DPRECISION=2 -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
     COMMAND ${CMAKE_COMMAND} -DWITH_JNA=${WITH_JNA}
-    -DPRECISION=3 -P ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    -DPRECISION=3 -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
     COMMAND ${CMAKE_COMMAND} -DWITH_JNA=${WITH_JNA}
-    -DPRECISION=4 -P ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    -DPRECISION=4 -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
     COMMAND ${CMAKE_COMMAND} -DWITH_JNA=${WITH_JNA}
-    -DPRECISION=5 -P ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    -DPRECISION=5 -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
     COMMAND ${CMAKE_COMMAND} -DWITH_JNA=${WITH_JNA}
-    -DPRECISION=6 -P ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    -DPRECISION=6 -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
     COMMAND ${CMAKE_COMMAND} -DWITH_JNA=${WITH_JNA}
-    -DPRECISION=7 -P ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    -DPRECISION=7 -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
     COMMAND ${CMAKE_COMMAND} -DWITH_JNA=${WITH_JNA}
-    -DPRECISION=9 -P ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    -DPRECISION=9 -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
     COMMAND ${CMAKE_COMMAND} -DWITH_JNA=${WITH_JNA}
-    -DPRECISION=10 -P ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    -DPRECISION=10 -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
     COMMAND ${CMAKE_COMMAND} -DWITH_JNA=${WITH_JNA}
-    -DPRECISION=11 -P ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    -DPRECISION=11 -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
     COMMAND ${CMAKE_COMMAND} -DWITH_JNA=${WITH_JNA}
-    -DPRECISION=13 -P ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    -DPRECISION=13 -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
     COMMAND ${CMAKE_COMMAND} -DWITH_JNA=${WITH_JNA}
-    -DPRECISION=14 -P ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    -DPRECISION=14 -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
     COMMAND ${CMAKE_COMMAND} -DWITH_JNA=${WITH_JNA}
-    -DPRECISION=15 -P ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    -DPRECISION=15 -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
     COMMAND ${CMAKE_COMMAND} -DWITH_JNA=${WITH_JNA}
-    -DPRECISION=16 -P ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
-    DEPENDS ${CMAKE_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    -DPRECISION=16 -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjbenchtest.cmake
       ${CMAKE_CURRENT_BINARY_DIR}/test/tjbenchtest)
   add_custom_target(tjexampletest COMMAND ${CMAKE_COMMAND}
     -DWITH_JNA=${WITH_JNA}
-    -P ${CMAKE_SOURCE_DIR}/cmakescripts/tjexampletest.cmake
-    DEPENDS ${CMAKE_SOURCE_DIR}/cmakescripts/tjexampletest.cmake
+    -P ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjexampletest.cmake
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/tjexampletest.cmake
       ${CMAKE_CURRENT_BINARY_DIR}/test/tjcomptest
       ${CMAKE_CURRENT_BINARY_DIR}/test/tjdecomptest
       ${CMAKE_CURRENT_BINARY_DIR}/test/tjtrantest)
@@ -1947,130 +1947,130 @@ endif() # WITH_TESTS
 # INSTALLATION
 ###############################################################################
 
-set(EXE ${CMAKE_EXECUTABLE_SUFFIX})
+# set(EXE ${CMAKE_EXECUTABLE_SUFFIX})
 
-if(WITH_TURBOJPEG)
-  if(ENABLE_SHARED)
-    install(TARGETS turbojpeg EXPORT ${CMAKE_PROJECT_NAME}Targets
-      INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib
-      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib
-      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
-    if(WITH_TOOLS)
-      install(TARGETS tjbench
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
-    endif()
-    if(MSVC_LIKE AND CMAKE_C_LINKER_SUPPORTS_PDB)
-      install(FILES "$<TARGET_PDB_FILE:turbojpeg>"
-        DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin OPTIONAL)
-    endif()
-  endif()
-  if(ENABLE_STATIC)
-    install(TARGETS turbojpeg-static EXPORT ${CMAKE_PROJECT_NAME}Targets
-      INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib)
-    if(NOT ENABLE_SHARED)
-      if(GENERATOR_IS_MULTI_CONFIG)
-        set(DIR "${CMAKE_CURRENT_BINARY_DIR}/\${CMAKE_INSTALL_CONFIG_NAME}")
-      else()
-        set(DIR ${CMAKE_CURRENT_BINARY_DIR})
-      endif()
-      if(WITH_TOOLS)
-        install(PROGRAMS ${DIR}/tjbench-static${EXE}
-          DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin
-          RENAME tjbench${EXE})
-      endif()
-    endif()
-  endif()
-  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/turbojpeg.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT include)
-endif()
+# if(WITH_TURBOJPEG)
+#   if(ENABLE_SHARED)
+#     install(TARGETS turbojpeg EXPORT ${CMAKE_PROJECT_NAME}Targets
+#       INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib
+#       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib
+#       RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
+#     if(WITH_TOOLS)
+#       install(TARGETS tjbench
+#         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
+#     endif()
+#     if(MSVC_LIKE AND CMAKE_C_LINKER_SUPPORTS_PDB)
+#       install(FILES "$<TARGET_PDB_FILE:turbojpeg>"
+#         DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin OPTIONAL)
+#     endif()
+#   endif()
+#   if(ENABLE_STATIC)
+#     install(TARGETS turbojpeg-static EXPORT ${CMAKE_PROJECT_NAME}Targets
+#       INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib)
+#     if(NOT ENABLE_SHARED)
+#       if(GENERATOR_IS_MULTI_CONFIG)
+#         set(DIR "${CMAKE_CURRENT_BINARY_DIR}/\${CMAKE_INSTALL_CONFIG_NAME}")
+#       else()
+#         set(DIR ${CMAKE_CURRENT_BINARY_DIR})
+#       endif()
+#       if(WITH_TOOLS)
+#         install(PROGRAMS ${DIR}/tjbench-static${EXE}
+#           DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin
+#           RENAME tjbench${EXE})
+#       endif()
+#     endif()
+#   endif()
+#   install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/turbojpeg.h
+#     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT include)
+# endif()
 
-if(ENABLE_STATIC)
-  install(TARGETS jpeg-static EXPORT ${CMAKE_PROJECT_NAME}Targets
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib)
-  if(NOT ENABLE_SHARED)
-    if(GENERATOR_IS_MULTI_CONFIG)
-      set(DIR "${CMAKE_CURRENT_BINARY_DIR}/\${CMAKE_INSTALL_CONFIG_NAME}")
-    else()
-      set(DIR ${CMAKE_CURRENT_BINARY_DIR})
-    endif()
-    if(WITH_TOOLS)
-      install(PROGRAMS ${DIR}/cjpeg-static${EXE}
-        DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin RENAME cjpeg${EXE})
-      install(PROGRAMS ${DIR}/djpeg-static${EXE}
-        DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin RENAME djpeg${EXE})
-      install(PROGRAMS ${DIR}/jpegtran-static${EXE}
-        DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin
-        RENAME jpegtran${EXE})
-    endif()
-  endif()
-endif()
+# if(ENABLE_STATIC)
+#   install(TARGETS jpeg-static EXPORT ${CMAKE_PROJECT_NAME}Targets
+#     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT lib)
+#   if(NOT ENABLE_SHARED)
+#     if(GENERATOR_IS_MULTI_CONFIG)
+#       set(DIR "${CMAKE_CURRENT_BINARY_DIR}/\${CMAKE_INSTALL_CONFIG_NAME}")
+#     else()
+#       set(DIR ${CMAKE_CURRENT_BINARY_DIR})
+#     endif()
+#     if(WITH_TOOLS)
+#       install(PROGRAMS ${DIR}/cjpeg-static${EXE}
+#         DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin RENAME cjpeg${EXE})
+#       install(PROGRAMS ${DIR}/djpeg-static${EXE}
+#         DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin RENAME djpeg${EXE})
+#       install(PROGRAMS ${DIR}/jpegtran-static${EXE}
+#         DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin
+#         RENAME jpegtran${EXE})
+#     endif()
+#   endif()
+# endif()
 
-if(WITH_TOOLS)
-  install(TARGETS rdjpgcom wrjpgcom
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
-endif()
+# if(WITH_TOOLS)
+#   install(TARGETS rdjpgcom wrjpgcom
+#     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin)
+# endif()
 
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/README.ijg
-  ${CMAKE_CURRENT_SOURCE_DIR}/README.md
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/example.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/doc/libjpeg.txt
-  ${CMAKE_CURRENT_SOURCE_DIR}/doc/structure.txt
-  ${CMAKE_CURRENT_SOURCE_DIR}/doc/usage.txt
-  ${CMAKE_CURRENT_SOURCE_DIR}/doc/wizard.txt
-  ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md
-  DESTINATION ${CMAKE_INSTALL_DOCDIR} COMPONENT doc)
-if(WITH_TURBOJPEG)
-  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/tjcomp.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/tjdecomp.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/tjtran.c
-    DESTINATION ${CMAKE_INSTALL_DOCDIR} COMPONENT doc)
-endif()
-if(WITH_JNA)
-  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/jna/TJ.java
-    ${CMAKE_CURRENT_SOURCE_DIR}/jna/TJComp.java
-    ${CMAKE_CURRENT_SOURCE_DIR}/jna/TJDecomp.java
-    ${CMAKE_CURRENT_SOURCE_DIR}/jna/TJTran.java
-    DESTINATION ${CMAKE_INSTALL_DOCDIR}/jna COMPONENT doc)
-endif()
+# install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/README.ijg
+#   ${CMAKE_CURRENT_SOURCE_DIR}/README.md
+#   ${CMAKE_CURRENT_SOURCE_DIR}/src/example.c
+#   ${CMAKE_CURRENT_SOURCE_DIR}/doc/libjpeg.txt
+#   ${CMAKE_CURRENT_SOURCE_DIR}/doc/structure.txt
+#   ${CMAKE_CURRENT_SOURCE_DIR}/doc/usage.txt
+#   ${CMAKE_CURRENT_SOURCE_DIR}/doc/wizard.txt
+#   ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md
+#   DESTINATION ${CMAKE_INSTALL_DOCDIR} COMPONENT doc)
+# if(WITH_TURBOJPEG)
+#   install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/tjcomp.c
+#     ${CMAKE_CURRENT_SOURCE_DIR}/src/tjdecomp.c
+#     ${CMAKE_CURRENT_SOURCE_DIR}/src/tjtran.c
+#     DESTINATION ${CMAKE_INSTALL_DOCDIR} COMPONENT doc)
+# endif()
+# if(WITH_JNA)
+#   install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/jna/TJ.java
+#     ${CMAKE_CURRENT_SOURCE_DIR}/jna/TJComp.java
+#     ${CMAKE_CURRENT_SOURCE_DIR}/jna/TJDecomp.java
+#     ${CMAKE_CURRENT_SOURCE_DIR}/jna/TJTran.java
+#     DESTINATION ${CMAKE_INSTALL_DOCDIR}/jna COMPONENT doc)
+# endif()
 
-if(UNIX OR MINGW)
-  if(WITH_TOOLS)
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/doc/cjpeg.1
-      ${CMAKE_CURRENT_SOURCE_DIR}/doc/djpeg.1
-      ${CMAKE_CURRENT_SOURCE_DIR}/doc/jpegtran.1
-      ${CMAKE_CURRENT_SOURCE_DIR}/doc/rdjpgcom.1
-      ${CMAKE_CURRENT_SOURCE_DIR}/doc/wrjpgcom.1
-      DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT man)
-  endif()
-endif()
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/libjpeg.pc
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig COMPONENT lib)
-if(WITH_TURBOJPEG)
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/libturbojpeg.pc
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig COMPONENT lib)
-endif()
-install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/${CMAKE_PROJECT_NAME}Config.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME}
-  COMPONENT lib)
-install(EXPORT ${CMAKE_PROJECT_NAME}Targets
-  NAMESPACE ${CMAKE_PROJECT_NAME}::
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME}
-  COMPONENT lib)
+# if(UNIX OR MINGW)
+#   if(WITH_TOOLS)
+#     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/doc/cjpeg.1
+#       ${CMAKE_CURRENT_SOURCE_DIR}/doc/djpeg.1
+#       ${CMAKE_CURRENT_SOURCE_DIR}/doc/jpegtran.1
+#       ${CMAKE_CURRENT_SOURCE_DIR}/doc/rdjpgcom.1
+#       ${CMAKE_CURRENT_SOURCE_DIR}/doc/wrjpgcom.1
+#       DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT man)
+#   endif()
+# endif()
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/libjpeg.pc
+#   DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig COMPONENT lib)
+# if(WITH_TURBOJPEG)
+#   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/libturbojpeg.pc
+#     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig COMPONENT lib)
+# endif()
+# install(FILES
+#   ${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/${CMAKE_PROJECT_NAME}Config.cmake
+#   ${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+#   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME}
+#   COMPONENT lib)
+# install(EXPORT ${CMAKE_PROJECT_NAME}Targets
+#   NAMESPACE ${CMAKE_PROJECT_NAME}::
+#   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME}
+#   COMPONENT lib)
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/jconfig.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/jerror.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/jmorecfg.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeglib.h
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT include)
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/jconfig.h
+#   ${CMAKE_CURRENT_SOURCE_DIR}/src/jerror.h
+#   ${CMAKE_CURRENT_SOURCE_DIR}/src/jmorecfg.h
+#   ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeglib.h
+#   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT include)
 
-include(cmakescripts/BuildPackages.cmake)
+# include(cmakescripts/BuildPackages.cmake)
 
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/cmake_uninstall.cmake.in"
-  "cmake_uninstall.cmake" IMMEDIATE @ONLY)
+# configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/cmake_uninstall.cmake.in"
+#   "cmake_uninstall.cmake" IMMEDIATE @ONLY)
 
-add_custom_target(uninstall COMMAND ${CMAKE_COMMAND} -P cmake_uninstall.cmake)
+# add_custom_target(uninstall COMMAND ${CMAKE_COMMAND} -P cmake_uninstall.cmake)
